@@ -1,0 +1,167 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<style>
+    .PIAconfig,
+    .PIAblocked,
+    .PIAblocked2,
+    .PIAinfoIcon,
+    .PIAexport,
+    .PIAnew,
+    .PIAexpand {
+        display: none !important;
+    }
+</style>
+
+<script src="~/libs/jquery/dist/jquery.js"></script>
+<script src="~/libs/jquery-ui/jquery-ui.js"></script>
+<script src="~/libs/trumbowyg/dist/trumbowyg.js"></script>
+<script src="~/libs/minicolors/jquery.minicolors.js"></script>
+<script src="~/libs/jquery-timepicker-addon/dist/jquery-ui-timepicker-addon.js"></script>
+<script src="~/libs/postItall/dist/jquery.postitall.js"></script>
+<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+
+@foreach (var item in ViewBag.Notes)
+{
+    <script>
+    $(document).ready(function () {
+        isActive = false;
+        $.PostItAll.new({
+            onCreated: function (id, options, obj) {
+                hubConnection.invoke("CreateNew", id, options.posX, options.posY, options.height, options.width, options.style.backgroundcolor);
+            },
+
+            onSelect: function () {
+                hubConnection.invoke("CheckOnActive");
+                isActive = true;
+            },
+
+            onChange: function (id) {
+                var json = $('#' + id.substring(1)).data('PIA-options')
+                $.post("Home/Change", { id: id, posX: json.posX, posY: json.posY, height: json.height, width: json.width, content: json.content, color: json.style.backgroundcolor });
+                if (isActive) {
+                    hubConnection.invoke("ChangeNote", id, json.posX, json.posY, json.height, json.width, json.style.backgroundcolor, json.content);
+                }
+            },
+
+            onDelete: function (id) {
+                $.post("Home/Delete", { id: id });
+                hubConnection.invoke("DeleteNote", id)
+            },
+
+            features: {
+                htmlEditor: false
+            },
+
+            id: "@item.NoteId".substring(11),
+            posX:"@item.PosX",
+            posY: "@item.PosY",
+            height: "@item.Height",
+            width: "@item.Width",
+            content: "@item.Content",
+            style: {
+                backgroundcolor: "@item.Color",
+            }
+        })
+    })
+    </script>
+}
+
+<script> 
+    const hubConnection = new signalR.HubConnectionBuilder().withUrl("/update").build();
+    hubConnection.on("CheckOnActive", function () { isActive = false })
+    var isActive = false;
+
+    hubConnection.on("CreateNew", function (noteId, posX, posY, height, width, color) {
+        isActive = false;
+        $.PostItAll.new({
+            onCreated: function (id, options, obj) {
+                hubConnection.invoke("CreateNew", id, options.posX, options.posY, options.height, options.width, options.style.backgroundcolor);
+            },
+
+            onSelect: function () {
+                hubConnection.invoke("CheckOnActive");
+                isActive = true;
+            },
+
+            onChange: function (id) {
+                var options = $('#' + id.substring(1)).data('PIA-options')
+                $.post("Home/Change", { id: id, posX: options.posX, posY: options.posY, height: options.height, width: options.width, content: options.content, color: options.style.backgroundcolor });
+                if (isActive) {
+                    hubConnection.invoke("ChangeNote", id, options.posX, options.posY, options.height, options.width, options.style.backgroundcolor, options.content);
+                }
+            },
+
+            onDelete: function (id) {
+                $.post("Home/Delete", { id: id });
+                hubConnection.invoke("DeleteNote", id)
+            },
+
+            features: {
+                htmlEditor: false
+            },
+            id: noteId.substring(11),
+            posX: posX,
+            posY: posY,
+            height: height,
+            width: width,
+            style: {
+                backgroundcolor: color,
+            }
+        })
+    });
+
+    hubConnection.on("ChangeNote", function (noteId, posX, posY, height, width, color, content) {        
+        $(noteId).postitall('options', {
+            content: content,
+            posX: posX,
+            posY: posY,
+            height: height,
+            width: width,
+            style: {
+                backgroundcolor: color,
+            }
+        });
+    });
+
+    hubConnection.on("DeleteNote", function (id) {
+        $(id).postitall('destroy');
+    });
+
+    $(document).mousedown(function (e) {
+        var border = $('.ui-resizable-handle');
+        var note = $(".note");
+        isActive = false;
+        if (note.has(e.target).length === 0 && border.has(e.target).length === 0) {
+            $.PostItAll.new({
+                onCreated: function (id, options, obj) {
+                    hubConnection.invoke("CreateNew", id, options.posX, options.posY, options.height, options.width, options.style.backgroundcolor);
+                },
+
+                onSelect: function () {
+                    hubConnection.invoke("CheckOnActive");
+                    isActive = true;
+                },
+
+                onChange: function (id) {
+                    var options = $('#' + id.substring(1)).data('PIA-options')
+                    $.post("Home/Change", { id: id, posX: options.posX, posY: options.posY, height: options.height, width: options.width, content: options.content, color: options.style.backgroundcolor });
+                    if (isActive) {
+                        hubConnection.invoke("ChangeNote", id, options.posX, options.posY, options.height, options.width, options.style.backgroundcolor, options.content);
+                    }                    
+                },
+
+                onDelete: function (id) {
+                    $.post("Home/Delete", { id: id });
+                    hubConnection.invoke("DeleteNote", id)
+                },
+                posX: e.pageX,
+                posY: e.pageY + 20,
+                features: {
+                    htmlEditor: false
+                }
+            });
+        }
+    });
+    hubConnection.start();
+</script>
