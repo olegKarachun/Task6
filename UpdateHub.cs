@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace Task6
 {
     public class UpdateHub : Hub
-    {   public async Task CreateNew(string noteId, string posX, string posY, int height, int width, string color)
+    {   public async Task CreateNew(string noteId, string posX, string posY, int height, int width, string color, string content)
         {
-            await Clients.Others.SendAsync("CreateNew", noteId, posX, posY, height, width, color);            
+            await Clients.Others.SendAsync("CreateNew", noteId, posX, posY, height, width, color, content);            
         }
 
         public async Task ChangeNote(string noteId, string posX, string posY, int height, int width, string color, string content)

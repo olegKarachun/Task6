@@ -11143,7 +11143,7 @@ $.widget( "ui.resizable", $.ui.mouse, {
 		cursor = $( ".ui-resizable-" + this.axis ).css( "cursor" );
 		$( "body" ).css( "cursor", cursor === "auto" ? this.axis + "-resize" : cursor );
 
-		this._addClass( "ui-resizable-resizing" );
+		//this._addClass( "ui-resizable-resizing" );
 		this._propagate( "start", event );
 		return true;
 	},
@@ -11227,7 +11227,7 @@ $.widget( "ui.resizable", $.ui.mouse, {
 
 		$( "body" ).css( "cursor", "auto" );
 
-		this._removeClass( "ui-resizable-resizing" );
+		//this._removeClass( "ui-resizable-resizing" );
 
 		this._propagate( "stop", event );
 

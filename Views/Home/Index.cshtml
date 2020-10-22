@@ -52,7 +52,7 @@
             features: {
                 htmlEditor: false
             },
-
+            content: "Input your text here...",
             id: "@item.NoteId".substring(11),
             posX:"@item.PosX",
             posY: "@item.PosY",
@@ -72,7 +72,7 @@
     hubConnection.on("CheckOnActive", function () { isActive = false })
     var isActive = false;
 
-    hubConnection.on("CreateNew", function (noteId, posX, posY, height, width, color) {
+    hubConnection.on("CreateNew", function (noteId, posX, posY, height, width, color, content) {
         isActive = false;
         $.PostItAll.new({
             onCreated: function (id, options, obj) {
@@ -100,6 +100,7 @@
             features: {
                 htmlEditor: false
             },
+            content: content,
             id: noteId.substring(11),
             posX: posX,
             posY: posY,
@@ -135,7 +136,7 @@
         if (note.has(e.target).length === 0 && border.has(e.target).length === 0) {
             $.PostItAll.new({
                 onCreated: function (id, options, obj) {
-                    hubConnection.invoke("CreateNew", id, options.posX, options.posY, options.height, options.width, options.style.backgroundcolor);
+                    hubConnection.invoke("CreateNew", id, options.posX, options.posY, options.height, options.width, options.style.backgroundcolor, options.content);
                 },
 
                 onSelect: function () {
@@ -155,6 +156,7 @@
                     $.post("Home/Delete", { id: id });
                     hubConnection.invoke("DeleteNote", id)
                 },
+                content: "Input your text here...",
                 posX: e.pageX,
                 posY: e.pageY + 20,
                 features: {

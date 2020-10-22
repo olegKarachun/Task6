@@ -78,6 +78,8 @@ A:\Task6\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\Microsoft.Data.S
 A:\Task6\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.0\System.Runtime.Caching.dll
 A:\Task6\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Runtime.Caching.dll
 A:\Task6\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Design.dll
-A:\Task6\obj\Debug\netcoreapp3.1\Task6.csproj.CoreCompileInputs.cache
-A:\Task6\obj\Debug\netcoreapp3.1\Task6.MvcApplicationPartsAssemblyInfo.cache
 A:\Task6\bin\Debug\netcoreapp3.1\libman.json
+A:\Task6\bin\Debug\netcoreapp3.1\Properties\serviceDependencies.5Task20201014171732 - Web Deploy.json
+A:\Task6\bin\Debug\netcoreapp3.1\Properties\serviceDependencies.json
+A:\Task6\bin\Debug\netcoreapp3.1\Properties\ServiceDependencies\5Task20201014171732 - Web Deploy\mssql1.arm.json
+A:\Task6\bin\Debug\netcoreapp3.1\Properties\ServiceDependencies\5Task20201014171732 - Web Deploy\profile.arm.json
